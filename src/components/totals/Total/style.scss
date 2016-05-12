@@ -1,0 +1,27 @@
+.Totals {
+  @extend %ehw-tile;
+  padding: 45px 8px;
+}
+
+.Totals__total {
+  @extend %ehw-tile-total;
+}
+
+.Totals__loading {
+  @extend %ehw-tile-loading-icon;
+}
+
+.Totals__icon {
+  @extend %ehw-tile-icon;
+  font-size: 60px;
+  padding: 0;
+  margin-right: 15px;
+}
+
+.Totals__content,
+.Totals__icon,
+.Totals__empty-label,
+.Totals__loading {
+  display: inline-block;
+  vertical-align: middle;
+}
