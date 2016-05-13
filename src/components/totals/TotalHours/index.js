@@ -2,18 +2,17 @@
 
 var _                = require('lodash');
 var React            = require('react');
-var I18nMixin        = require('../../mixins/I18n');
 var campaigns        = require('../../../api/campaigns');
-var Icon             = require('../../helpers/Icon');
 var numeral          = require('numbro');
+var Total            = require('../Total');
 var SECONDS_TO_HOURS = 1 / 3600;
 
 module.exports = React.createClass({
   displayName: 'TotalHours',
-  mixins: [I18nMixin],
   propTypes: {
     campaignUid: React.PropTypes.string,
     campaignUids: React.PropTypes.array,
+    charityUid: React.PropTypes.string,
     renderIcon: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.bool]),
     backgroundColor: React.PropTypes.string,
     textColor: React.PropTypes.string,
@@ -25,6 +24,7 @@ module.exports = React.createClass({
     return {
       campaignUid: '',
       campaignUids: [],
+      charityUid: '',
       renderIcon: true,
       backgroundColor: null,
       textColor: null,
@@ -89,25 +89,7 @@ module.exports = React.createClass({
   },
 
   renderTotal: function() {
-    var totalHours     = this.state.total * SECONDS_TO_HOURS;
-    var formattedTotal = numeral(totalHours).format(this.props.format);
-    var title          = this.t('title');
-    var emptyLabel     = this.t('emptyLabel');
-
-    if (this.state.isLoading) {
-      return <Icon className="TotalHours__loading" icon="refresh" />;
-    }
-
-    if (this.state.total) {
-      return (
-        <div className="TotalHours__content">
-          <div className="TotalHours__total">{ formattedTotal }</div>
-          <div className="TotalHours__title">{ title }</div>
-        </div>
-      );
-    }
-
-    return <p className="TotalHours__empty-label">{ emptyLabel }</p>;
+    return numeral(this.state.total * SECONDS_TO_HOURS).format(this.props.format);
   },
 
   renderIcon: function() {
@@ -117,22 +99,19 @@ module.exports = React.createClass({
       renderIcon = 'clock-o';
     }
 
-    if (renderIcon) {
-      return <Icon className="TotalHours__icon" icon={ renderIcon } />;
-    }
+    return renderIcon;
   },
 
   render: function() {
-    var customStyle = {
-      backgroundColor: this.props.backgroundColor,
-      color: this.props.textColor
-    };
-
     return (
-      <div className={ "TotalHours" } style={ customStyle }>
-        { this.renderIcon() }
-        { this.renderTotal() }
-      </div>
+      <Total
+        total={ this.renderTotal() }
+        renderIcon={ this.renderIcon() }
+        backgroundColor={ this.props.backgroundColor }
+        textColor={ this.props.textColor }
+        i18n={ this.props.i18n }
+        isLoading={ this.state.isLoading }
+      />
     );
   }
 });

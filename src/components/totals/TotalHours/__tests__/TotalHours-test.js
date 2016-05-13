@@ -10,13 +10,13 @@ describe('TotalDistance', function() {
   var findByClass = TestUtils.findRenderedDOMComponentWithClass;
   var scryByClass = TestUtils.scryRenderedDOMComponentsWithClass;
 
-  describe('Component when handed multiple uids', function() {
+  describe('Component defaults', function() {
     var totalHours;
     var element;
 
     beforeEach(function() {
       campaigns.findByUids.mockClear();
-      totalHours = <TotalHours campaignUids={ ["us-22", "us-24"] } />;
+      totalHours = <TotalHours />;
       element = TestUtils.renderIntoDocument(totalHours);
     });
 
@@ -25,32 +25,29 @@ describe('TotalDistance', function() {
     });
 
     it('renders an icon by default', function() {
-      var icon = findByClass(element, 'TotalHours__icon');
+      var icon = findByClass(element, 'Totals__icon');
       expect(icon).not.toBeNull();
-    });
-
-    it('renders a loading icon', function() {
-      element.setState({isLoading: true});
-      findByClass(element, 'TotalHours__loading');
-    });
-
-    it('loads data for multiple campaigns', function() {
-      expect(campaigns.findByUids.mock.calls.length).toEqual(1);
-      expect(campaigns.findByUids).toBeCalledWith(["us-22", "us-24"], element.onSuccess);
     });
   });
 
-  describe('Component when handed one uid', function() {
+  describe('UID Handling', function() {
     var totalHours;
     var element;
 
     beforeEach(function() {
       campaigns.findByUids.mockClear();
-      totalHours = <TotalHours campaignUid="us-22" />;
+    });
+
+    it('loads data for multiple campaigns', function() {
+      totalHours = <TotalHours campaignUids={ ["us-22", "us-24"] } />;
       element = TestUtils.renderIntoDocument(totalHours);
+      expect(campaigns.findByUids.mock.calls.length).toEqual(1);
+      expect(campaigns.findByUids).toBeCalledWith(["us-22", "us-24"], element.onSuccess);
     });
 
     it('handles loads data for a single campaign', function() {
+      totalHours = <TotalHours campaignUid="us-22" />;
+      element = TestUtils.renderIntoDocument(totalHours);
       expect(campaigns.findByUids.mock.calls.length).toEqual(1);
       expect(campaigns.findByUids).toBeCalledWith(["us-22"], element.onSuccess);
     });
@@ -73,7 +70,7 @@ describe('TotalDistance', function() {
         isLoading: false,
         total: 123
       });
-      var title = findByClass(element, 'TotalHours__title');
+      var title = findByClass(element, 'Totals__title');
 
       expect(title.textContent).toBe(translation.title);
     });
@@ -90,7 +87,7 @@ describe('TotalDistance', function() {
         total: 37800
       });
 
-      var total = findByClass(element, 'TotalHours__total');
+      var total = findByClass(element, 'Totals__total');
       expect(total.textContent).toBe('10.5');
     });
 
@@ -104,7 +101,7 @@ describe('TotalDistance', function() {
         total: 37800
       });
 
-      var total = findByClass(element, 'TotalHours__total');
+      var total = findByClass(element, 'Totals__total');
       expect(total.textContent).toBe('10.50');
     });
   });
